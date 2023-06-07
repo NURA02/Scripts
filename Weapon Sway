@@ -1,0 +1,38 @@
+using System;
+using UnityEngine;
+
+public class WeaponSway : MonoBehaviour {
+
+    [Header("Position")]
+    [SerializeField] private float amount = 0.02f;
+    [SerializeField] private float maxAmount = 0.06f;
+    [SerializeField] private float smoothAmount = 6f;
+
+    // Internal privates
+    private Vector3 _initalPos;
+
+    private float InputX;
+    private float InputY;
+
+    private void Start() {
+        _initalPos = transform.localPosition;
+    }
+
+    private void Update() {
+        CalculateSway();
+        MoveSway();
+    }
+    private void CalculateSway() {
+        InputX = -Input.GetAxis("Mouse X");
+        InputY = -Input.GetAxis("Mouse Y");
+    }
+
+    private void MoveSway() {
+        float moveX = Mathf.Clamp(InputX * amount, -maxAmount, maxAmount);
+        float moveY = Mathf.Clamp(InputY * amount, -maxAmount, maxAmount);
+
+        Vector3 finalPosition = new Vector3(moveX, moveY, 0);
+
+        transform.localPosition = Vector3.Lerp(transform.localPosition, finalPosition + _initalPos, Time.deltaTime * smoothAmount);
+    }
+}
